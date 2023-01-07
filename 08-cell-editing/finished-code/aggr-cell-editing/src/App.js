@@ -8,6 +8,7 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      refresh: true,
       modelVisibility: true,
       columnDefs: [
         {
@@ -78,14 +79,33 @@ class App extends Component {
       frameworkComponents: {
         numericCellEditor: NumericCellEditor,
       },
+      modifiedData: [],
     };
   }
 
-  componentDidMount() {
+  fetchData = () => {
+    console.log("sdsd");
     fetch("/api/accounts")
       .then((result) => result.json())
       .then((rowData) => this.setState({ rowData }));
+  };
+
+  componentDidMount() {
+    this.fetchData();
   }
+
+  undoEdits = () => {
+    console.log("on refresh");
+    this.setState({ refresh: !this.state.refresh });
+    this.fetchData();
+  };
+
+  saveEdits = () => {
+    console.log("on saving");
+    // this.setState({ refresh: !this.state.refresh });
+    // this.fetchData();
+    console.log(this.state.rowData);
+  };
 
   onGridReady = (params) => {
     this.gridApi = params.api;
@@ -98,7 +118,16 @@ class App extends Component {
   };
 
   onCellValueChanged = ({ data }) => {
-    console.log(`Update db: ${JSON.stringify(data)}`);
+    // console.log(`Update db: ${JSON.stringify(data)}`);
+    // this.setState({ modifiedData: [...this.state.modifiedData, data] });
+    console.log(this.state.rowData);
+  };
+
+  onRowValueChanged = (event) => {
+    console.log("ggg");
+    // console.log(`Update db: ${JSON.stringify(data)}`);
+    // this.setState({ modifiedData: [...this.state.modifiedData, data] });
+    // console.log(this.state.modifiedData);
   };
 
   startEditing = () => {
@@ -136,6 +165,12 @@ class App extends Component {
         <button type="button" onClick={this.stopEditing}>
           Stop Editing
         </button>
+        <button type="button" onClick={this.undoEdits}>
+          Undo Edits
+        </button>
+        <button type="button" onClick={this.saveEdits}>
+          Save Edits
+        </button>
         <AgGridReact
           onGridReady={this.onGridReady}
           columnDefs={this.state.columnDefs}
@@ -145,7 +180,9 @@ class App extends Component {
           rowDeselection={this.state.rowDeselection}
           undoRedoCellEditing={true}
           undoRedoCellEditingLimit={5}
+          // editType={"fullRow"}
           onCellValueChanged={this.onCellValueChanged}
+          onRowValueChanged={this.onRowValueChanged}
           frameworkComponents={this.state.frameworkComponents}
         ></AgGridReact>
       </div>

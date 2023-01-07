@@ -13,7 +13,7 @@ class App extends Component {
         {
           headerName: "Name",
           field: "name",
-          cellRenderer: "nameFieldComponent",
+          cellRenderer: "nameFieldComponent", //we can use cellRenderer to render a React component
         },
         {
           headerName: "Avatar",
@@ -40,8 +40,10 @@ class App extends Component {
       },
       rowData: [],
       frameworkComponents: {
-        //we create a new state variable  that will hold the
+        //this is all framework components that we want to use within ag-grid , for example a React framework component or a Angular framework component
+        //we create a new state variable  that will hold the component . this is registering the component
         nameFieldComponent: NameFieldComponent,
+        //we can other components here below...
       },
     };
   }
@@ -53,7 +55,7 @@ class App extends Component {
   }
 
   onGridReady = (params) => {
-    //this is a callback passed to the AgGrid so that they we get the grid api access
+    //this is a callback passed to the AgGrid so that we get the grid api access
     this.gridApi = params.api;
     this.columnApi = params.columnApi;
     this.gridApi.sizeColumnsToFit();
@@ -68,7 +70,7 @@ class App extends Component {
           rowData={this.state.rowData}
           defaultColDef={this.state.defaultColDef}
           frameworkComponents={this.state.frameworkComponents}
-          // we need to pass frameworkComponents as a prop to Ag grid
+          // we need to pass frameworkComponents as a prop to Ag grid..we need to register the framework components with ag-grid
         ></AgGridReact>
       </div>
     );

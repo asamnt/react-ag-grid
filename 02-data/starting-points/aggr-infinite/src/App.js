@@ -14,80 +14,86 @@ class App extends Component {
           headerName: "ID",
           width: 50,
           valueGetter: "node.id",
-          cellRenderer: "loadingRenderer"
+          cellRenderer: "loadingRenderer",
         },
         {
           headerName: "Athlete",
           field: "athlete",
-          width: 150
+          width: 150,
         },
         {
           headerName: "Age",
           field: "age",
-          width: 90
+          width: 90,
         },
         {
           headerName: "Country",
           field: "country",
-          width: 120
+          width: 120,
         },
         {
           headerName: "Year",
           field: "year",
-          width: 90
+          width: 90,
         },
         {
           headerName: "Date",
           field: "date",
-          width: 110
+          width: 110,
         },
         {
           headerName: "Sport",
           field: "sport",
-          width: 110
+          width: 110,
         },
         {
           headerName: "Gold",
           field: "gold",
-          width: 100
+          width: 100,
         },
         {
           headerName: "Silver",
           field: "silver",
-          width: 100
+          width: 100,
         },
         {
           headerName: "Bronze",
           field: "bronze",
-          width: 100
+          width: 100,
         },
         {
           headerName: "Total",
           field: "total",
-          width: 100
-        }
+          width: 100,
+        },
       ],
       defaultColDef: { resizable: true },
       components: {
-        loadingRenderer: function(params) {
+        loadingRenderer: function (params) {
           if (params.value !== undefined) {
             return params.value;
           } else {
             return '<img src="./loading.gif">';
           }
-        }
+        },
       },
       rowSelection: "multiple",
-      rowData: []
+      rowModelType: "infinite",
+      rowBuffer: 0,
+      paginationPageSize: 100,
+      cacheOverflowSize: 2,
+      maxConcurrentDatasourceRequests: 1,
+      maxBlocksInCache: 10,
+      infiniteInitialRowCount: 100,
     };
   }
 
-  onGridReady = params => {
+  onGridReady = (params) => {
     fetch(
       "https://raw.githubusercontent.com/ag-grid/ag-grid/master/packages/ag-grid-docs/src/olympicWinners.json"
     )
-      .then(res => res.json())
-      .then(data => {
+      .then((res) => res.json())
+      .then((data) => {
         this.setState({ rowData: data });
       });
   };
@@ -99,7 +105,7 @@ class App extends Component {
           id="myGrid"
           style={{
             height: "500px",
-            width: "1000px"
+            width: "1000px",
           }}
           className="ag-theme-balham"
         >
@@ -112,6 +118,14 @@ class App extends Component {
             rowDeselection={true}
             rowBuffer={this.state.rowBuffer}
             rowData={this.state.rowData}
+            rowModelType={this.state.rowModelType}
+            paginationPageSize={this.state.paginationPageSize}
+            cacheOverflowSize={this.state.cacheOverflowSize}
+            maxConcurrentDatasourceRequests={
+              this.state.maxConcurrentDatasourceRequests
+            }
+            infiniteInitialRowCount={this.state.infiniteInitialRowCount}
+            maxBlocksInCache={this.state.maxBlocksInCache}
           />
         </div>
       </div>
